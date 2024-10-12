@@ -7,7 +7,8 @@ import com.api.ga5000.ecommerce.entities.Comment;
 import com.api.ga5000.ecommerce.entities.Product;
 import com.api.ga5000.ecommerce.repositories.ProductRepository;
 import com.api.ga5000.ecommerce.services.interfaces.IProductService;
-import com.api.ga5000.ecommerce.util.Mapper;
+import com.api.ga5000.ecommerce.util.DtoConverter;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,24 +17,24 @@ import java.util.List;
 @Service
 public class ProductService implements IProductService {
     private final ProductRepository productRepository;
-    private final Mapper mapper;
+    private final DtoConverter converter;
 
-    public ProductService(ProductRepository productRepository, Mapper mapper) {
+    public ProductService(ProductRepository productRepository, DtoConverter converter) {
         this.productRepository = productRepository;
-        this.mapper = mapper;
+        this.converter = converter;
     }
 
     @Override
     public void addProduct(AddProductDTO addProductDTO) {
-        Product product = mapper.toProduct(addProductDTO);
+        Product product = new Product();
+        BeanUtils.copyProperties(addProductDTO,product);
         productRepository.save(product);
     }
 
     @Override
-    public void updateProduct(UpdateProductDTO product, Long productId) {
+    public void updateProduct(UpdateProductDTO updatedProduct, Long productId) {
         Product existingProduct = getProductById(productId);
-        mapper.toProduct(product, existingProduct);
-
+        BeanUtils.copyProperties(updatedProduct,existingProduct);
         productRepository.save(existingProduct);
     }
 

@@ -1,6 +1,9 @@
 package com.api.ga5000.ecommerce.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -52,6 +55,9 @@ public class Product {
         this.imageUrl = imageUrl;
         this.category = category;
         this.inventory = inventory;
+    }
+
+    public Product(@NotBlank String s, @NotBlank String s1, @NotNull @Min(1) BigDecimal price, String s2, @NotNull Category category) {
     }
 
     public Long getProductId() {
