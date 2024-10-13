@@ -1,4 +1,6 @@
 package com.api.ga5000.ecommerce.dtos;
 
-public record CartItemDTO() {
+import jakarta.validation.constraints.NotNull;
+
+public record CartItemDTO(@NotNull Long productId, @NotNull Integer quantity) {
 }

@@ -10,7 +10,7 @@ public interface ICartService {
     Cart getCartById(Long cartId);
     void addItemToCart(Long cartId, CartItemDTO cartItemDTO);
     void removeItemFromCart(Long cartId, Long itemId);
-    void updateItemQuantity(Long cartId, Long itemId, int quantity);
+    void updateItemQuantity(Long cartId, Long itemId, Integer quantity);
     void clearCart(Long cartId);
     void checkoutCart(Long cartId);
 }
