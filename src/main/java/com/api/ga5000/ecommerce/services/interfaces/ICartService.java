@@ -6,11 +6,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ICartService {
-    void createCart(Long userId);
+    Cart getCartByUserId(Long userId);
     Cart getCartById(Long cartId);
-    void addItemToCart(Long cartId, CartItemDTO cartItemDTO);
-    void removeItemFromCart(Long cartId, Long itemId);
-    void updateItemQuantity(Long cartId, Long itemId, Integer quantity);
+    Cart addItemToCart(Long userId, Long productId, Integer quantity);
+    Cart removeItemFromCart(Long cartId, Long productId);
     void clearCart(Long cartId);
     void checkoutCart(Long cartId);
 }

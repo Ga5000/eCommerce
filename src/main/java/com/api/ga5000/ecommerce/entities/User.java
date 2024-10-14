@@ -28,6 +28,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String lastName;
 
+    @Column(nullable = false, length = 15)
+    private String phoneNumber;
+
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Cart cart = new Cart();
 
@@ -44,13 +47,14 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public User(String email, String password, String firstName, String lastName, Role role, List<Address> addresses) {
+    public User(String email, String password, String firstName, String lastName, String phoneNumber, Role role, List<Address> addresses) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
         this.addresses = addresses;
+        this.phoneNumber = phoneNumber;
     }
 
     public User() {}
@@ -125,6 +129,14 @@ public class User implements UserDetails {
 
     public void setAddresses(List<Address> addresses) {
         this.addresses = addresses;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     @Override
