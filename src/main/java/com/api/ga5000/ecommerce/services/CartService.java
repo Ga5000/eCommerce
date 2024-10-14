@@ -1,13 +1,12 @@
 package com.api.ga5000.ecommerce.services;
 
 import com.api.ga5000.ecommerce.entities.*;
-import com.api.ga5000.ecommerce.entities.enums.OrderStatus;
 import com.api.ga5000.ecommerce.repositories.*;
 import com.api.ga5000.ecommerce.services.interfaces.ICartService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
+
 
 @Service
 public class CartService implements ICartService {
@@ -15,15 +14,12 @@ public class CartService implements ICartService {
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
-    private final OrderRepository orderRepository;
 
     public CartService(CartRepository cartRepository, ProductRepository productRepository,
-                       UserRepository userRepository, OrderRepository orderRepository,
-                       OrderItemRepository orderItemRepository) {
+                       UserRepository userRepository) {
         this.cartRepository = cartRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
-        this.orderRepository = orderRepository;
     }
 
     @Override
@@ -35,12 +31,6 @@ public class CartService implements ICartService {
             cartRepository.save(cart);
         }
         return cart;
-    }
-
-    @Override
-    public Cart getCartById(Long cartId) {
-        return cartRepository.findById(cartId)
-                .orElseThrow(() -> new RuntimeException("Cart not found"));
     }
 
     @Transactional
@@ -73,8 +63,8 @@ public class CartService implements ICartService {
 
     @Transactional
     @Override
-    public Cart removeItemFromCart(Long cartId, Long productId) {
-        Cart cart = getCartById(cartId);
+    public Cart removeItemFromCart(Long userId, Long productId) {
+        Cart cart = getCartByUserId(userId);
         CartItem cartItem = cart.getCartItems().stream()
                 .filter(item -> item.getProduct().getProductId().equals(productId))
                 .findFirst()
@@ -87,53 +77,11 @@ public class CartService implements ICartService {
 
     @Transactional
     @Override
-    public void clearCart(Long cartId) {
-        Cart cart = getCartById(cartId);
+    public void clearCart(Long userId) {
+       Cart cart = getCartByUserId(userId);
         cart.getCartItems().clear();
         cartRepository.save(cart);
     }
 
-    @Transactional
-    @Override
-    public void checkoutCart(Long userId) {
-        Cart cart = getCartByUserId(userId);
-        if (cart.getCartItems().isEmpty()) {
-            throw new RuntimeException("Cart is empty");
-        }
-
-        Order order = new Order();
-        order.setUser(cart.getUser());
-        order.setStatus(OrderStatus.PENDING);
-        order.setPhoneNumber(cart.getUser().getPhoneNumber());
-        order.setAddress(cart.getUser().getAddresses().get(0));
-
-        BigDecimal totalAmount = BigDecimal.ZERO;
-        for (CartItem cartItem : cart.getCartItems()) {
-            Product product = cartItem.getProduct();
-
-            OrderItem orderItem = new OrderItem();
-            orderItem.setProduct(product);
-            orderItem.setQuantity(cartItem.getQuantity());
-            BigDecimal price = product.getProductPrice();
-            orderItem.setPrice(price);
-
-            BigDecimal itemTotal = price.multiply(new BigDecimal(cartItem.getQuantity()));
-            totalAmount = totalAmount.add(itemTotal);
-
-            orderItem.setOrder(order);
-            order.getOrderItems().add(orderItem);
-
-            int newInventory = product.getInventory() - cartItem.getQuantity();
-            if (newInventory < 0) {
-                throw new RuntimeException("Insufficient stock for product: " + product.getProductName());
-            }
-            product.setInventory(newInventory);
-            productRepository.save(product);
-        }
-
-        order.setTotal(totalAmount);
-
-        orderRepository.save(order);
-    }
 
 }

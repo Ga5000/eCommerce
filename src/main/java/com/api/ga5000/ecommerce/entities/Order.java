@@ -37,7 +37,8 @@ public class Order {
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private Payment payment;
 
-    public Order(User user, Address address, String phoneNumber, OrderStatus status, List<OrderItem> orderItems, BigDecimal total) {
+    public Order(User user, Address address, String phoneNumber, OrderStatus status, List<OrderItem> orderItems,
+                 BigDecimal total) {
         this.user = user;
         this.address = address;
         this.phoneNumber = phoneNumber;

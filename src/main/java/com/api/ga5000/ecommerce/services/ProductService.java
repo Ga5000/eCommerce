@@ -9,6 +9,7 @@ import com.api.ga5000.ecommerce.repositories.ProductRepository;
 import com.api.ga5000.ecommerce.services.interfaces.IProductService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class ProductService implements IProductService {
         this.productRepository = productRepository;
     }
 
+    @Transactional
     @Override
     public void addProduct(AddProductDTO addProductDTO) {
         Product product = new Product();
@@ -27,6 +29,7 @@ public class ProductService implements IProductService {
         productRepository.save(product);
     }
 
+    @Transactional
     @Override
     public void updateProduct(UpdateProductDTO updatedProduct, Long productId) {
         Product existingProduct = getProductById(productId);
@@ -34,6 +37,7 @@ public class ProductService implements IProductService {
         productRepository.save(existingProduct);
     }
 
+    @Transactional
     @Override
     public void deleteProduct(Long productId) {
         Product product = getProductById(productId);
