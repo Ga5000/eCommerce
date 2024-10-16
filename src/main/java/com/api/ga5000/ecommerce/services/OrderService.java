@@ -15,12 +15,14 @@ public class OrderService implements IOrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final CartService cartService;
 
     public OrderService(OrderRepository orderRepository, UserRepository userRepository,
-                        ProductRepository productRepository) {
+                        ProductRepository productRepository, CartService cartService) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.productRepository = productRepository;
+        this.cartService = cartService;
     }
 
     @Override
@@ -73,6 +75,7 @@ public class OrderService implements IOrderService {
         order.setTotal(totalAmount);
 
         orderRepository.save(order);
+        cartService.clearCart(userId);
 
         return order;
     }
