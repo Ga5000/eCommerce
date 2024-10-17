@@ -8,9 +8,11 @@ import com.api.ga5000.ecommerce.entities.Product;
 import com.api.ga5000.ecommerce.repositories.ProductRepository;
 import com.api.ga5000.ecommerce.services.interfaces.IProductService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 @Service
@@ -62,7 +64,9 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public List<Product> getProductsByFilter(SearchFilter searchFilter) {
-        return productRepository.findByFilters(searchFilter);
+    public List<Product> getProductsByFilter(SearchFilter searchFilter, Pageable pageable) {
+       Page<Product> products = productRepository.findByFilters(searchFilter,pageable);
+
+       return products.getContent();
     }
 }

@@ -6,7 +6,7 @@ import com.api.ga5000.ecommerce.dtos.UpdateProductDTO;
 import com.api.ga5000.ecommerce.entities.Comment;
 import com.api.ga5000.ecommerce.entities.Product;
 
-
+import java.awt.print.Pageable;
 import java.util.List;
 
 public interface IProductService {
@@ -17,5 +17,5 @@ public interface IProductService {
 
     List<Product> getAllProducts();
     List<Comment> getProductComments(Long productId);
-    List<Product> getProductsByFilter(SearchFilter searchFilter);
+    List<Product> getProductsByFilter(SearchFilter searchFilter, Pageable pageable);
 }

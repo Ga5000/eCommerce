@@ -3,11 +3,13 @@ package com.api.ga5000.ecommerce.repositories;
 import com.api.ga5000.ecommerce.dtos.SearchFilter;
 import com.api.ga5000.ecommerce.entities.Category;
 import com.api.ga5000.ecommerce.entities.Product;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.awt.print.Pageable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -27,5 +29,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "(:#{#filter.minPrice} IS NULL OR p.productPrice >= :#{#filter.minPrice}) AND " +
             "(:#{#filter.maxPrice} IS NULL OR p.productPrice <= :#{#filter.maxPrice}) AND " +
             "p.inventory > 0")
-    List<Product> findByFilters(@Param("filter") SearchFilter filter);
+    Page<Product> findByFilters(@Param("filter") SearchFilter filter, Pageable pageable);
 }
