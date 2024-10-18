@@ -1,7 +1,7 @@
 package com.api.ga5000.ecommerce.dtos;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
-public record AddCommentDTO(@NotBlank String content, @NotNull int rating) {
+public record AddCommentDTO(@NotBlank String content, @Max(5) int rating) {
 }
